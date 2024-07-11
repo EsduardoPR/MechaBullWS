@@ -20,21 +20,14 @@ export async function chargeClave() {
     }
 }
 
-export async function verifyToken(token: string): Promise<any|Boolean> {
+export async function verifyToken(token: string): Promise<any|{message:string}> {
     try {
         if (!currentSecretKey) {
             await chargeClave();
         }
         const decoded: any = jwt.verify(token, currentSecretKey);
-
-        if (decoded.permission && decoded.permission.includes('server')) {
-            return true;
-        } else {
-            return decoded;
-        }
-
-
+        return decoded;
     } catch (error) {
-        throw new Error('Token inválido');
+        throw new Error('token-invalid');
     }
 }
